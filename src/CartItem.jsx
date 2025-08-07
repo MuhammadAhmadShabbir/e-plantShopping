@@ -8,30 +8,50 @@ const CartItem = ({ onContinueShopping }) => {
   const dispatch = useDispatch();
 
   // Calculate total amount for all products in the cart
-  const calculateTotalAmount = () => {
- 
-  };
+const calculateTotalAmount = () => {
+  let total = 0;
 
-  const handleContinueShopping = (e) => {
-   
-  };
+  cart.forEach(item => {
+    const quantity = item.quantity;
+    const cost = parseFloat(item.cost.substring(1)); // Remove "$" and convert to number
+    total += cost * quantity;
+  });
+
+  return total;
+};
+const handleContinueShopping = (e) => {
+  e.preventDefault();
+  if (typeof onContinueShopping === 'function') {
+    onContinueShopping(e);
+  }
+};
 
 
+const handleIncrement = (item) => {
+  dispatch(updateQuantity({ name: item.name, quantity: item.quantity + 1 }));
+};
 
-  const handleIncrement = (item) => {
-  };
-
-  const handleDecrement = (item) => {
-   
-  };
-
-  const handleRemove = (item) => {
-  };
+ const handleDecrement = (item) => {
+  if (item.quantity > 1) {
+    dispatch(updateQuantity({ name: item.name, quantity: item.quantity - 1 }));
+  } else {
+    dispatch(removeItem(item.name));
+  }
+};
+const handleRemove = (item) => {
+  dispatch(removeItem(item.name));
+};
 
   // Calculate total cost based on quantity for an item
-  const calculateTotalCost = (item) => {
-  };
+const calculateTotalCost = (item) => {
+  const unitPrice = parseFloat(item.cost.substring(1)); // Remove "$" and convert to number
+  return unitPrice * item.quantity;
+};
 
+const handleCheckoutShopping = (e) => {
+  e.preventDefault();
+  alert('Checkout functionality will be added in a future update.');
+};
   return (
     <div className="cart-container">
       <h2 style={{ color: 'black' }}>Total Cart Amount: ${calculateTotalAmount()}</h2>
