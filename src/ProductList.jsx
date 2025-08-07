@@ -9,6 +9,8 @@ import { addItem } from './CartSlice';
 function ProductList({ onHomeClick }) {
     const dispatch = useDispatch();
     const cartItems = useSelector(state => state.cart.items);
+    const isInCart = (plantName) =>
+    cartItems.some(item => item.name === plantName);
 
     const calculateTotalQuantity = () => {
         return cartItems ? cartItems.reduce((total, item) => total + item.quantity, 0) : 0;
@@ -321,8 +323,10 @@ function ProductList({ onHomeClick }) {
           <div className="product-description">{plant.description}</div> {/* Display plant description */}
           <div className="product-cost">{plant.cost}</div> {/* Display plant cost */}
           <button
-            className="product-button"
             onClick={() => handleAddToCart(plant)} // Handle adding plant to cart
+            disabled={isInCart(plant.name)}
+            className={isInCart(plant.name) ? 'product-button-disabled' : 'product-button'}
+
           >
             Add to Cart
           </button>
